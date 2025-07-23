@@ -13,6 +13,9 @@ export class User {
 
   @Column({ name: 'profession', nullable: false })
   profession: string;
+  
+  @Column({ name: 'face_file_path', nullable: true })
+  faceFilePath: string;
 
   @Column({ name: 'facetoken', nullable: true })
   faceToken: string;

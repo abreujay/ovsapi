@@ -12,4 +12,5 @@ export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
   profession: string;
+
 }

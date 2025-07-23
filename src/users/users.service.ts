@@ -11,17 +11,18 @@ export class UsersService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  
-    //registrar usuario
-    async registerUser(userData:CreateUserDto){
-
-        const user = this.userRepository.create(userData)
-        await this.userRepository.save(user)
-        return {
-            user,
-            message: "Usuário Registrado!"
-        }
-    }
-
+  // Registrar usuário com ou sem arquivo
+  async registerUser(userData: CreateUserDto, file?: Express.Multer.File) {
+    const user = this.userRepository.create({
+      ...userData,
+      faceFilePath: file ? file.path : undefined,
+      createdAt: new Date(),
+    });
+    await this.userRepository.save(user);
+    return {
+      user,
+      message: 'Usuário Registrado!'
+    };
+  }
 }
  
