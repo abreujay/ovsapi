@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './users.entity';
 import { CreateUserDto } from '../dtos/dtos/create-user.dto';
+import { UpdateUserDto } from 'src/dtos/dtos/update-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -21,8 +22,33 @@ export class UsersService {
     await this.userRepository.save(user);
     return {
       user,
-      message: 'Usuário Registrado!'
+      message: 'Usuário Registrado!',
+    };
+  }
+
+  async getAll() {
+    return this.userRepository.find();
+  }
+
+  async update(id: string, userData: UpdateUserDto, file?: Express.Multer.File) {
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
+    await this.userRepository.update(id, userData);
+    return {
+      message: 'Usuário atualizado com sucesso',
+    };
+  }
+
+  async delete(id: string) {
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
+    await this.userRepository.delete(id);
+    return {
+      message: 'Usuário deletado com sucesso',
     };
   }
 }
- 
