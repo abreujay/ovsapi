@@ -35,10 +35,20 @@ export class UsersService {
     if (!user) {
       throw new NotFoundException('Usuário não encontrado');
     }
-    await this.userRepository.update(id, userData);
-    return {
-      message: 'Usuário atualizado com sucesso',
-    };
+      Object.assign(user, userData);
+
+  // Se veio um novo arquivo, atualiza o caminho da foto
+  if (file) {
+    user.faceFilePath = file.path.replace(/\\/g, '/');
+  }
+
+  user.updatedAt = new Date();
+
+  await this.userRepository.save(user);
+  return {
+    user,
+    message: 'Usuário atualizado com sucesso',
+  };
   }
 
   async delete(id: string) {
